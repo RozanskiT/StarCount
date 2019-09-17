@@ -1,0 +1,11 @@
+name: StarCount-env
+channels:
+  - anaconda
+  - astropy
+dependencies:
+  - python=3   # or 2.7
+  - numpy
+  - scipy
+  - pil
+  - photutils
+  - matplotlib
