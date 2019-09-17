@@ -39,14 +39,14 @@ class StarCount(object):
     Uses aperture phototometry go get the flux,
     and DAOFIND algoritm to find the stars positions in image.
     """
-    def __init__(self, FWHM, threshold, aperture_radius):
+    def __init__(self, fwhm, threshold, aperture_radius):
         self.file_names = []
         self.images = []
         self.sources_positions = []
         self.fluxes_in_all_images = []
         self.reference_star_idx = None
 
-        self.FWHM = FWHM
+        self.fwhm = fwhm
         self.threshold = threshold
         self.aperture_radius = aperture_radius
 
@@ -65,7 +65,7 @@ class StarCount(object):
             self.file_names.append(os.path.split(file_name)[-1])
         if self.images:
             std = np.std(self.images[0])
-            self.daofind_ = DAOStarFinder(fwhm=self.FWHM, threshold=self.threshold*std)
+            self.daofind_ = DAOStarFinder(fwhm=self.fwhm, threshold=self.threshold*std)
             # Compute size of circle where stars will be counted and add it to plot
             im_shape = np.shape(self.images[0])
             r = np.min(im_shape)/4
@@ -106,6 +106,11 @@ class StarCount(object):
 
     def check_adjustments(self):
         if self.images:
+            print("Current adjustments are:\n")
+            print("Aperture radius = {} pix".format(self.aperture_radius))
+            print("FWHM = {} pix".format(self.fwhm))
+            print("Threshold = {:.2f}\n".format(self.threshold))
+            #-------------------------------------------------------------------
             image = self.images[0]
             positions = None
             if len(self.images) == len(self.sources_positions):
@@ -216,7 +221,7 @@ def main():
     args = parser.parse_args()
 
     # Create StarCount object
-    sc = StarCount(FWHM=args.fwhm,
+    sc = StarCount(fwhm=args.fwhm,
                    threshold=args.threshold,
                    aperture_radius=args.aperture_radius
                    )
